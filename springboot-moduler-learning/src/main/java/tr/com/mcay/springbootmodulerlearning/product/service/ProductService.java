@@ -2,6 +2,8 @@ package tr.com.mcay.springbootmodulerlearning.product.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import tr.com.mcay.springbootmodulerlearning.product.dto.ProductDTO;
 import tr.com.mcay.springbootmodulerlearning.product.exceptions.ProductNotFoundException;
@@ -10,28 +12,32 @@ import tr.com.mcay.springbootmodulerlearning.product.repository.ProductRepositor
 @Service
 public class ProductService {
     private final ProductRepository productRepository;
+    private static final Logger logger = LoggerFactory.getLogger(ProductService.class);
 
     public ProductService(ProductRepository productRepository) {
         this.productRepository = productRepository;
     }
 
     public List<ProductDTO> getAllProducts() {
-
+        logger.info("Fetching all products");
         return productRepository.findAll().stream().map(this::convertToDTO).collect(Collectors.toList());
     }
 
 
     public ProductDTO createProduct(ProductDTO  productDTO) {
+        logger.info("Creating new product: {}", productDTO.getName());
         Product product = convertToEntity(productDTO);
         Product savedProduct = productRepository.save(product);
         return convertToDTO(savedProduct);
     }
     public ProductDTO getProductById(Long id) {
+        logger.debug("Fetching product with ID: {}", id);
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ProductNotFoundException("Product with ID " + id + " not found"));
         return convertToDTO(product);
     }
     public ProductDTO updateProduct(Long id, ProductDTO productDTO) {
+        logger.debug("Updating product with ID: {}", id);
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ProductNotFoundException("Product with ID " + id + " not found"));
 
@@ -39,13 +45,16 @@ public class ProductService {
         product.setPrice(productDTO.getPrice());
 
         Product updatedProduct = productRepository.save(product);
+        logger.info("Product updated: {}", id);
         return convertToDTO(updatedProduct);
     }
     public String deleteProduct(Long id) {
+        logger.warn("Deleting product with ID: {}", id);
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ProductNotFoundException("Product with ID " + id + " not found"));
 
         productRepository.delete(product);
+        logger.info("Product deleted: {}", id);
         return "Product deleted successfully";
     }
     // Dönüşüm metotları (Entity -> DTO ve DTO -> Entity)
