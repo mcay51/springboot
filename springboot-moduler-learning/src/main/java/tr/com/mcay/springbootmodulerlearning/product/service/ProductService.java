@@ -4,6 +4,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import tr.com.mcay.springbootmodulerlearning.product.dto.ProductDTO;
+import tr.com.mcay.springbootmodulerlearning.product.exceptions.ProductNotFoundException;
 import tr.com.mcay.springbootmodulerlearning.product.model.Product;
 import tr.com.mcay.springbootmodulerlearning.product.repository.ProductRepository;
 @Service
@@ -27,12 +28,12 @@ public class ProductService {
     }
     public ProductDTO getProductById(Long id) {
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found"));
+                .orElseThrow(() -> new ProductNotFoundException("Product with ID " + id + " not found"));
         return convertToDTO(product);
     }
     public ProductDTO updateProduct(Long id, ProductDTO productDTO) {
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found"));
+                .orElseThrow(() -> new ProductNotFoundException("Product with ID " + id + " not found"));
 
         product.setName(productDTO.getName());
         product.setPrice(productDTO.getPrice());
@@ -42,7 +43,7 @@ public class ProductService {
     }
     public String deleteProduct(Long id) {
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found"));
+                .orElseThrow(() -> new ProductNotFoundException("Product with ID " + id + " not found"));
 
         productRepository.delete(product);
         return "Product deleted successfully";
