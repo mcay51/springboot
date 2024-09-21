@@ -1,6 +1,7 @@
 package tr.com.mcay.springbootmodulerlearning.product.controller;
 
 
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 import tr.com.mcay.springbootmodulerlearning.product.dto.ProductDTO;
 import tr.com.mcay.springbootmodulerlearning.product.service.ProductService;
@@ -23,7 +24,7 @@ public class ProductController {
     }
 
     @PostMapping
-    public ProductDTO createProduct(@RequestBody ProductDTO productDTO) {
+    public ProductDTO createProduct(@Valid @RequestBody ProductDTO productDTO) {
         return productService.createProduct(productDTO);
     }
 
