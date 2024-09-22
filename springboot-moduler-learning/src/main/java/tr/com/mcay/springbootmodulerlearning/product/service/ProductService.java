@@ -4,6 +4,7 @@ import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import tr.com.mcay.springbootmodulerlearning.product.dto.ProductDTO;
 import tr.com.mcay.springbootmodulerlearning.product.exceptions.ProductNotFoundException;
@@ -32,6 +33,19 @@ public class ProductService {
     }
     public ProductDTO getProductById(Long id) {
         logger.debug("Fetching product with ID: {}", id);
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new ProductNotFoundException("Product with ID " + id + " not found"));
+        return convertToDTO(product);
+    }
+    @Cacheable ("products")
+    public ProductDTO getProductByIdCache(Long id){
+        logger.debug("getProductByIdCache() Fetching product with ID: {}", id);
+        // Simülasyon: bir gecikme ekleyelim
+        try {
+            Thread.sleep(2000);  // Veri çekme işleminin uzun sürdüğünü simüle eder
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ProductNotFoundException("Product with ID " + id + " not found"));
         return convertToDTO(product);

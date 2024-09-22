@@ -32,6 +32,10 @@ public class ProductController {
     public ProductDTO getProductById(@PathVariable Long id) {
         return productService.getProductById(id);
     }
+    @GetMapping("/cache/{id}")
+    public ProductDTO getProductByIdCache(@PathVariable Long id) {
+        return productService.getProductByIdCache(id);
+    }
 
     @PutMapping("/{id}")
     public ProductDTO updateProduct(@PathVariable Long id, @RequestBody ProductDTO productDTO) {
