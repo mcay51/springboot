@@ -50,6 +50,19 @@ public class ProductService {
                 .orElseThrow(() -> new ProductNotFoundException("Product with ID " + id + " not found"));
         return convertToDTO(product);
     }
+    @Cacheable (value="productCache",key="#id")
+    public ProductDTO getProductByIdRedisCache(Long id){
+        logger.debug("getProductByIdRedisCache() Fetching product with ID: {}", id);
+        // Simülasyon: bir gecikme ekleyelim
+        try {
+            Thread.sleep(2000);  // Veri çekme işleminin uzun sürdüğünü simüle eder
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new ProductNotFoundException("Product with ID " + id + " not found"));
+        return convertToDTO(product);
+    }
     public ProductDTO updateProduct(Long id, ProductDTO productDTO) {
         logger.debug("Updating product with ID: {}", id);
         Product product = productRepository.findById(id)

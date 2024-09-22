@@ -36,6 +36,10 @@ public class ProductController {
     public ProductDTO getProductByIdCache(@PathVariable Long id) {
         return productService.getProductByIdCache(id);
     }
+    @GetMapping("/redis-cache/{id}")
+    public ProductDTO getProductByIdRedisCache(@PathVariable Long id) {
+        return productService.getProductByIdRedisCache(id);
+    }
 
     @PutMapping("/{id}")
     public ProductDTO updateProduct(@PathVariable Long id, @RequestBody ProductDTO productDTO) {

@@ -6,10 +6,12 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
+
 
 @Getter
 @Setter
-public class ProductDTO {
+public class ProductDTO implements Serializable {
 
     private Long id;
     @NotBlank(message = "Product name cannot be empty")
