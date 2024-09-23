@@ -44,6 +44,7 @@ public class JwtUtil {
     // JWT Token oluşturma
     public String generateToken(String username) {
         Map<String, Object> claims = new HashMap<>();
+        claims.put("Uygulama", "Spring Boot Moduler Learning");
         return createToken(claims, username);
     }
 
