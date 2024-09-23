@@ -21,6 +21,7 @@ public class UserService {
     private final UserRepository userRepository; // Kullanıcı veritabanı erişimi
     private final BCryptPasswordEncoder passwordEncoder;
 
+
     public UserService(JwtUtil jwtUtil, UserRepository userRepository, BCryptPasswordEncoder passwordEncoder) {
         this.jwtUtil = jwtUtil;
         this.userRepository = userRepository;
@@ -45,6 +46,10 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(user.getPassword())); // Şifreyi hash'le
         userRepository.save(user); // Kullanıcıyı kaydet
         return "Kullanıcı başarıyla kaydedildi!";
+    }
+
+    public Optional<User> getUserById(Long id) {
+       return userRepository.findById(id);
     }
 }
 
