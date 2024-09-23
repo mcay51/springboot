@@ -1,9 +1,7 @@
 package tr.com.mcay.springbootmodulerlearning;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.*;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import tr.com.mcay.springbootmodulerlearning.security.jwt.service.JwtUtil;
@@ -30,7 +28,11 @@ class UserServiceTest {
 
     @Mock
     private BCryptPasswordEncoder passwordEncoder;
-
+    /**
+     * Argument Captors: Mock nesnelerinin metotlarına gönderilen argümanları yakalamak için kullanılır.
+     */
+    @Captor
+    private ArgumentCaptor<User> userCaptor;
     private User testUser;
 
     @BeforeEach
@@ -98,5 +100,31 @@ class UserServiceTest {
         assertEquals("Kullanıcı başarıyla kaydedildi!", result);
         verify(passwordEncoder).encode("password");
         verify(userRepository).save(testUser);
+    }
+
+    @Test
+    public void testCaptorRegisterUser() {
+        User user = new User();
+        user.setUsername("testUser");
+        user.setPassword("password");
+
+        userService.register(user);
+
+        verify(userRepository).save(userCaptor.capture());
+        assertEquals("testUser", userCaptor.getValue().getUsername());
+    }
+
+    /**
+     * Spies: Gerçek nesneleri taklit etmenizi sağlar. Spies ile gerçek metotları çağırabilir ve sadece belirli metotları mocklayabilirsiniz.
+     */
+    @Test
+    public void testUserServiceWithSpy() {
+        UserService spyUserService = spy(new UserService(jwtUtil, userRepository, passwordEncoder));
+
+        doReturn("mockToken").when(spyUserService).authenticate(anyString(), anyString());
+
+        String token = spyUserService.authenticate("user", "password");
+        System.out.println("Token : "+token);
+        assertEquals("mockToken", token);
     }
 }
