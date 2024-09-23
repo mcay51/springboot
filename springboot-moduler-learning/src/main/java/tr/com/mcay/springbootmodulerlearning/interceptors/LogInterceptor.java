@@ -11,6 +11,7 @@ import org.springframework.web.servlet.ModelAndView;
 public class LogInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        System.out.println("-------------Interceptor Start -----------------");
         System.out.println("Interceptor: Incoming request to " + request.getRequestURI());
         return true;
     }
@@ -24,5 +25,6 @@ public class LogInterceptor implements HandlerInterceptor {
         System.out.println("Interceptor: after complation method " );
         System.out.println("Interceptor: Incoming request to " + request.getRequestURI());
         System.out.println("Interceptor: post handle response status to " + response.getStatus());
+        System.out.println("-------------Interceptor End -----------------");
     }
 }

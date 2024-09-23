@@ -9,12 +9,12 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-@WebServlet(urlPatterns = "/health")
+@WebServlet(urlPatterns = "/actuator/health")
 public class HealthCheckServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
+        System.out.println("-------------Servlet Start -----------------");
         boolean isDatabaseHealthy = checkDatabaseHealth();
 
 
@@ -25,6 +25,7 @@ public class HealthCheckServlet extends HttpServlet {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             resp.getWriter().write("Database connection is down!");
         }
+        System.out.println("-------------Servlet End -----------------");
     }
 
     private boolean checkDatabaseHealth() {
