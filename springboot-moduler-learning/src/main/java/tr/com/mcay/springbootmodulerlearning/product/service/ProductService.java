@@ -4,6 +4,8 @@ import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import tr.com.mcay.springbootmodulerlearning.product.dto.ProductDTO;
@@ -63,6 +65,7 @@ public class ProductService {
                 .orElseThrow(() -> new ProductNotFoundException("Product with ID " + id + " not found"));
         return convertToDTO(product);
     }
+    @CachePut(value = "productCache", key = "#id")
     public ProductDTO updateProduct(Long id, ProductDTO productDTO) {
         logger.debug("Updating product with ID: {}", id);
         Product product = productRepository.findById(id)
@@ -92,11 +95,16 @@ public class ProductService {
         productDTO.setPrice(product.getPrice());
         return productDTO;
     }
-
+  /*  @CacheEvict(value = "productCache", allEntries = true)
+    public void clearAllProductsCache() {
+        // Tüm ürün cache'ini temizler
+    }*/
     private Product convertToEntity(ProductDTO productDTO) {
         Product product = new Product();
         product.setName(productDTO.getName());
         product.setPrice(productDTO.getPrice());
         return product;
     }
+
+
 }
